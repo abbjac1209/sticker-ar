@@ -42,8 +42,8 @@ font-size:15px;
 
 <body>
 
-<button id="startButton">Start Wedding AR</button>
-<div id="msg">Tap start, then point at the wedding photo</div>
+<button id="startButton">Start AR</button>
+<div id="msg">Tap start, then point at the photo</div>
 
 <a-scene
 mindar-image="imageTargetSrc: targets.mind; filterMinCF:0.001; filterBeta:0.01;"
@@ -118,7 +118,7 @@ startButton.addEventListener("click", async () => {
     video.pause();
   } catch (e) {}
 
-  msg.innerText = "Point camera at the wedding photo";
+  msg.innerText = "Point camera at the photo";
 });
 
 target.addEventListener("targetFound", () => {
@@ -128,7 +128,7 @@ target.addEventListener("targetFound", () => {
 });
 
 target.addEventListener("targetLost", () => {
-  msg.innerText = "Point camera at the wedding photo";
+  msg.innerText = "Point camera at the photo";
   video.pause();
 });
 </script>
