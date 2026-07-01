@@ -9,15 +9,33 @@
 
 <style>
 body { margin:0; overflow:hidden; background:black; font-family:Arial; }
+
 #startButton {
-position:fixed; z-index:9999; top:50%; left:50%;
+position:fixed;
+z-index:9999;
+top:50%;
+left:50%;
 transform:translate(-50%,-50%);
-padding:16px 28px; font-size:20px; border-radius:14px; border:none;
+padding:16px 28px;
+font-size:20px;
+border-radius:14px;
+border:none;
+background:white;
+color:black;
 }
+
 #msg {
-position:fixed; z-index:9999; bottom:20px; left:10px; right:10px;
-color:white; background:rgba(0,0,0,0.6);
-padding:10px; text-align:center; border-radius:10px;
+position:fixed;
+z-index:9999;
+bottom:20px;
+left:10px;
+right:10px;
+color:white;
+background:rgba(0,0,0,0.6);
+padding:10px;
+text-align:center;
+border-radius:10px;
+font-size:15px;
 }
 </style>
 </head>
@@ -35,18 +53,23 @@ vr-mode-ui="enabled:false"
 device-orientation-permission-ui="enabled:false">
 
 <a-assets>
-<video id="stickerVideo" src="line.mp4" preload="auto" loop muted playsinline webkit-playsinline></video>
-<video id="lineVideo" src="sticker.mp4" preload="auto" loop muted playsinline webkit-playsinline></video>
+<video id="lineVideo" src="line.mp4" preload="auto" loop muted playsinline webkit-playsinline></video>
+<video id="stickerVideo" src="sticker.mp4" preload="auto" loop muted playsinline webkit-playsinline></video>
+<video id="logoVideo" src="logo.mp4" preload="auto" loop muted playsinline webkit-playsinline></video>
 </a-assets>
 
 <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
 
-<a-entity id="stickerTarget" mindar-image-target="targetIndex: 0">
+<a-entity id="lineTarget" mindar-image-target="targetIndex: 0">
+<a-video src="#lineVideo" width="1" height="0.65" position="0 0 0.03"></a-video>
+</a-entity>
+
+<a-entity id="stickerTarget" mindar-image-target="targetIndex: 1">
 <a-video src="#stickerVideo" width="1" height="0.65" position="0 0 0.03"></a-video>
 </a-entity>
 
-<a-entity id="lineTarget" mindar-image-target="targetIndex: 1">
-<a-video src="#lineVideo" width="1" height="0.65" position="0 0 0.03"></a-video>
+<a-entity id="logoTarget" mindar-image-target="targetIndex: 2">
+<a-video src="#logoVideo" width="1" height="0.65" position="0 0 0.03"></a-video>
 </a-entity>
 
 </a-scene>
@@ -55,40 +78,60 @@ device-orientation-permission-ui="enabled:false">
 const startButton = document.getElementById("startButton");
 const msg = document.getElementById("msg");
 
-const stickerVideo = document.getElementById("stickerVideo");
 const lineVideo = document.getElementById("lineVideo");
+const stickerVideo = document.getElementById("stickerVideo");
+const logoVideo = document.getElementById("logoVideo");
 
-const stickerTarget = document.getElementById("stickerTarget");
 const lineTarget = document.getElementById("lineTarget");
+const stickerTarget = document.getElementById("stickerTarget");
+const logoTarget = document.getElementById("logoTarget");
+
+function pauseAllVideos() {
+  lineVideo.pause();
+  stickerVideo.pause();
+  logoVideo.pause();
+}
 
 startButton.addEventListener("click", async () => {
   startButton.style.display = "none";
   msg.innerText = "Camera loading. Please allow camera access.";
-  msg.innerText = "Point camera at Sticker or LINE picture";
-});
-
-stickerTarget.addEventListener("targetFound", () => {
-  msg.innerText = "Sticker detected";
-  lineVideo.pause();
-  stickerVideo.currentTime = 0;
-  stickerVideo.play();
-});
-
-stickerTarget.addEventListener("targetLost", () => {
-  stickerVideo.pause();
-  msg.innerText = "Point camera at Sticker or LINE picture";
+  msg.innerText = "Point camera at the object";
 });
 
 lineTarget.addEventListener("targetFound", () => {
   msg.innerText = "LINE detected";
-  stickerVideo.pause();
+  pauseAllVideos();
   lineVideo.currentTime = 0;
   lineVideo.play();
 });
 
 lineTarget.addEventListener("targetLost", () => {
   lineVideo.pause();
-  msg.innerText = "Point camera at Sticker or LINE picture";
+  msg.innerText = "Point camera at the object";
+});
+
+stickerTarget.addEventListener("targetFound", () => {
+  msg.innerText = "Sticker detected";
+  pauseAllVideos();
+  stickerVideo.currentTime = 0;
+  stickerVideo.play();
+});
+
+stickerTarget.addEventListener("targetLost", () => {
+  stickerVideo.pause();
+  msg.innerText = "Point camera at the object";
+});
+
+logoTarget.addEventListener("targetFound", () => {
+  msg.innerText = "Logo detected";
+  pauseAllVideos();
+  logoVideo.currentTime = 0;
+  logoVideo.play();
+});
+
+logoTarget.addEventListener("targetLost", () => {
+  logoVideo.pause();
+  msg.innerText = "Point camera at the object";
 });
 </script>
 
